@@ -1,0 +1,54 @@
+/* a program to determine the distance between any Obstacle and the Sensor
+connected to the circuit (IR sensor). If the obstacle is near enough, a
+buzzer, which is connected to the circuit will introduce a sound to inform
+that there is an obstacle. If not, the buzzer will not send anything. 
+All these indications will be shown in a LCD with the proper message. */
+
+// LCD module connections
+sbit LCD_RS at RE0_bit;
+sbit LCD_EN at RE2_bit;
+sbit LCD_D4 at RD4_bit;
+sbit LCD_D5 at RD5_bit;
+sbit LCD_D6 at RD6_bit;
+sbit LCD_D7 at RD7_bit;
+sbit LCD_RS_Direction at TRISE0_bit;
+sbit LCD_EN_Direction at TRISE2_bit;
+sbit LCD_D4_Direction at TRISD4_bit;
+sbit LCD_D5_Direction at TRISD5_bit;
+sbit LCD_D6_Direction at TRISD6_bit;
+sbit LCD_D7_Direction at TRISD7_bit;
+// End LCD module connections
+
+
+bit distance;                      	//Declaring the distance variable as a bit
+
+void main() {
+OSCCON = 0x73;                      // 8 MHz Internal Oscillator
+ADCON1=0x0F;                        // Digital I/O
+TRISA.B0=1;                        	//Set pin 0 of portA as an input
+TRISE = 0x00;                       // PORTE is Output
+PORTE.B1 = 0;                     	// R/W is 0 for writing to LCD
+TRISD = 0x00;                       // PORTD is Output
+
+
+Sound_Init(&PORTD, 3);              //Initiate sound in PortD pin 3
+Lcd_Init();                         // Initialize LCD
+Lcd_Cmd(_LCD_CLEAR);            	// Clear display
+Lcd_Cmd(_LCD_CURSOR_OFF);           // Cursor off
+Lcd_Out(1,1,"The distance is:");   	// Write text  in first line
+
+
+while(1){
+
+    distance=PORTA.B0;           //Store the reading in distance
+         if (distance==1)       //check if no obstacle
+         Lcd_Out(2,6,"Far ");   //write text at the center of 2nd line
+         else
+         {
+         Lcd_Out(2,6,"Near");   //write text at the center of 2nd line
+         Sound_Play(1000, 500); // Play sound of 1KHz in duration of 0.5 sec
+         } ;
+         delay_ms(200);         //delay for 0.2 seconds
+
+
+}}
