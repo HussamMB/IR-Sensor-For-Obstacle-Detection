@@ -1,2 +1,3 @@
 # IR-Sensor-For-Obstacle-Detection
-Detecting obstacles using reflected infra red light
+Detecting obstacles using reflected infra red light.
+
